@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Test API – Login</title>
+</head>
+<body>
+
+<h2>Logowanie</h2>
+
+<input id="email" type="email" placeholder="email"><br><br>
+<input id="password" type="password" placeholder="hasło"><br><br>
+
+<button onclick="login()">Zaloguj</button>
+
+<hr>
+
+<button onclick="getProfile()">Pobierz profil</button>
+
+<pre id="output"></pre>
+
+<script>
+const API_URL = "http://127.0.0.1:5000";
+let token = null;
+
+async function login() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const res = await fetch(API_URL + "/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+
+    if (data.access_token) {
+        token = data.access_token;
+        document.getElementById("output").textContent =
+            "Zalogowano ✅\nToken zapisany";
+    } else {
+        document.getElementById("output").textContent =
+            JSON.stringify(data, null, 2);
+    }
+}
+
+async function getProfile() {
+    if (!token) {
+        alert("Najpierw się zaloguj");
+        return;
+    }
+
+    const res = await fetch(API_URL + "/profile", {
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    });
+
+    const data = await res.json();
+    document.getElementById("output").textContent =
+        JSON.stringify(data, null, 2);
+}
+</script>
+
+</body>
+</html>
