@@ -3,12 +3,14 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_cors import CORS
 
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:LaFFFFqZTrQOKiBWZEqswlIdzLOYAcHv@switchback.proxy.rlwy.net:17724/railway"
-#app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+CORS(app)
+#app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:LaFFFFqZTrQOKiBWZEqswlIdzLOYAcHv@switchback.proxy.rlwy.net:17724/railway"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["JWT_SECRET_KEY"] = "super-secret-key-zmien-pozniej"
 jwt = JWTManager(app)
@@ -73,7 +75,8 @@ def home():
         return jsonify({"error": str(e)})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
 
 @app.route("/debug/users")
 def debug_users():
