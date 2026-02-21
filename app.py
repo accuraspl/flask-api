@@ -12,7 +12,7 @@ CORS(app)
 #app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:LaFFFFqZTrQOKiBWZEqswlIdzLOYAcHv@switchback.proxy.rlwy.net:17724/railway"
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config["JWT_SECRET_KEY"] = "super-secret-key-zmien-pozniej"
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 jwt = JWTManager(app)
 
 db = SQLAlchemy(app)
